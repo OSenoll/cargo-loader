@@ -104,7 +104,6 @@ function App() {
           <div className="col-span-3 space-y-4 overflow-y-auto pr-2">
             <ContainerSelector />
             <ItemForm />
-            <ItemList />
           </div>
 
           {/* Orta Panel - 3D Goruntu */}
@@ -112,8 +111,9 @@ function App() {
             <Scene3D />
           </div>
 
-          {/* Sag Panel - Sonuclar */}
+          {/* Sag Panel - Eklenen Kutular & Sonuclar */}
           <div className="col-span-3 space-y-4 overflow-y-auto pl-2">
+            <ItemList />
             <StatsPanel />
 
             {/* Kullanim Kilavuzu */}

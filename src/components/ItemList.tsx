@@ -59,7 +59,7 @@ export function ItemList() {
       </div>
 
       {/* Liste */}
-      <div className="space-y-2 max-h-[300px] overflow-y-auto pr-1">
+      <div className="space-y-2 max-h-[400px] overflow-y-auto pr-1">
         {items.map((item) => (
           <div
             key={item.id}
