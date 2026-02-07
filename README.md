@@ -1,73 +1,77 @@
-# React + TypeScript + Vite
+# Cargo Loader
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+3D konteyner yukleme optimizasyon uygulamasi. Esyalarinizi en verimli sekilde konteynere yerlestirin.
 
-Currently, two official plugins are available:
+![Cargo Loader](https://img.shields.io/badge/React-18-blue) ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue) ![Three.js](https://img.shields.io/badge/Three.js-3D-green) ![Tailwind](https://img.shields.io/badge/Tailwind-CSS-purple)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Ozellikler
 
-## React Compiler
+- **3D Gorsellestirme** - Interaktif 3D gorunum (dondurme, yakinlastirma, esya secme)
+- **Akilli Yerlestirme** - LAFF algoritmasiyla optimal kutu yerlestirme
+- **Kisitlama Destegi** - Esyalara ozel kurallar tanimlama
+- **Gercek Konteyner Olculeri** - 20ft, 40ft ve 40ft High Cube destegi
+- **LocalStorage** - Verileriniz otomatik kaydedilir
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Kisitlama Etiketleri
 
-## Expanding the ESLint configuration
+| Etiket | Aciklama |
+|--------|----------|
+| Ustte Olmali | Bu esyanin ustune hicbir sey konulamaz |
+| Altta Olmali | Bu esya zemine yakin olmali |
+| Kirilgan | Ustune maksimum 20kg yuk konulabilir |
+| Dondurulemez | Sadece belirtilen yonde yerlestirilebilir |
+| Agir - Alta | Agir esya, altta ve merkezde olmali |
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Kurulum
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+```bash
+# Repoyu klonla
+git clone https://github.com/OSenoll/cargo-loader.git
+cd cargo-loader
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+# Bagimliliklari yukle
+npm install
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# Gelistirme sunucusunu baslat
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Kullanim
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+1. **Konteyner Sec** - Sol panelden konteyner tipini secin
+2. **Esya Ekle** - Boyut, agirlik ve kisitlamalari girin
+3. **Hesapla** - "Hesapla" butonuna tiklayin
+4. **Incele** - 3D goruntude sonucu inceleyin, esyalara tiklayarak detaylari gorun
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Teknolojiler
+
+- **React 18** + TypeScript
+- **Three.js** / React Three Fiber - 3D gorsellestirme
+- **Zustand** - State yonetimi
+- **Tailwind CSS** - Styling
+- **Vite** - Build tool
+
+## Algoritma
+
+Uygulama **LAFF (Largest Area Fit First)** algoritmasini kullanir:
+
+1. Esyalar oncelik sirasina gore siralanir (agir ve buyuk olanlar once)
+2. Her esya icin en uygun bos alan bulunur
+3. Kisitlamalar kontrol edilir (kirilganlik, ustte olma zorunlulugu vb.)
+4. Esya yerlestirildikten sonra kalan bos alanlar guncellenir
+
+## Konteyner Olculeri
+
+| Tip | Uzunluk | Genislik | Yukseklik | Max Agirlik |
+|-----|---------|----------|-----------|-------------|
+| 20ft Standard | 5.89m | 2.35m | 2.39m | 28.2 ton |
+| 40ft Standard | 12.03m | 2.35m | 2.39m | 28.8 ton |
+| 40ft High Cube | 12.03m | 2.35m | 2.69m | 28.56 ton |
+
+## Lisans
+
+MIT
+
+---
+
+Made with Claude Code
