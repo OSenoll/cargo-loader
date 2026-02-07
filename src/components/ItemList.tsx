@@ -1,19 +1,21 @@
 import { useStore } from '../store/useStore';
+import { translations } from '../lib/i18n';
 import { ConstraintBadge } from './ConstraintBadge';
 import { Package, Trash2, X } from 'lucide-react';
 
 export function ItemList() {
-  const { items, removeItem, clearItems, selectedItemId, setSelectedItemId } = useStore();
+  const { items, removeItem, clearItems, selectedItemId, setSelectedItemId, language } = useStore();
+  const t = translations[language];
 
   if (items.length === 0) {
     return (
       <div className="bg-slate-800 rounded-lg p-4">
         <div className="flex items-center gap-2 mb-3">
           <Package className="w-5 h-5 text-purple-400" />
-          <h2 className="text-lg font-semibold">Esya Listesi</h2>
+          <h2 className="text-lg font-semibold">{t.itemList}</h2>
         </div>
         <div className="text-slate-500 text-center py-8">
-          Henuz esya eklenmedi
+          {t.noItemsYet}
         </div>
       </div>
     );
@@ -32,26 +34,26 @@ export function ItemList() {
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <Package className="w-5 h-5 text-purple-400" />
-          <h2 className="text-lg font-semibold">Esya Listesi</h2>
-          <span className="text-sm text-slate-400">({totalItems} adet)</span>
+          <h2 className="text-lg font-semibold">{t.itemList}</h2>
+          <span className="text-sm text-slate-400">({totalItems} {t.items})</span>
         </div>
         <button
           onClick={clearItems}
           className="text-red-400 hover:text-red-300 text-sm flex items-center gap-1"
         >
           <X className="w-4 h-4" />
-          Temizle
+          {t.clear}
         </button>
       </div>
 
       {/* Ozet */}
       <div className="grid grid-cols-2 gap-2 mb-3 text-sm">
         <div className="bg-slate-700/50 rounded px-2 py-1">
-          <span className="text-slate-400">Toplam Agirlik:</span>{' '}
+          <span className="text-slate-400">{t.totalWeight}</span>{' '}
           <span className="text-white font-medium">{totalWeight.toFixed(1)} kg</span>
         </div>
         <div className="bg-slate-700/50 rounded px-2 py-1">
-          <span className="text-slate-400">Toplam Hacim:</span>{' '}
+          <span className="text-slate-400">{t.totalVolume}</span>{' '}
           <span className="text-white font-medium">{totalVolume.toFixed(2)} m³</span>
         </div>
       </div>

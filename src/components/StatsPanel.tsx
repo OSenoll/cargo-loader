@@ -1,8 +1,10 @@
 import { useStore } from '../store/useStore';
+import { translations } from '../lib/i18n';
 import { BarChart3, Package, AlertTriangle } from 'lucide-react';
 
 export function StatsPanel() {
-  const { packingResult, selectedContainer } = useStore();
+  const { packingResult, selectedContainer, language } = useStore();
+  const t = translations[language];
 
   if (!packingResult) {
     return null;
@@ -15,13 +17,13 @@ export function StatsPanel() {
     <div className="bg-slate-800 rounded-lg p-4">
       <div className="flex items-center gap-2 mb-4">
         <BarChart3 className="w-5 h-5 text-cyan-400" />
-        <h2 className="text-lg font-semibold">Sonuclar</h2>
+        <h2 className="text-lg font-semibold">{t.results}</h2>
       </div>
 
       {/* Hacim Kullanimi */}
       <div className="mb-4">
         <div className="flex items-center justify-between text-sm mb-1">
-          <span className="text-slate-400">Hacim Kullanimi</span>
+          <span className="text-slate-400">{t.volumeUsage}</span>
           <span className="font-medium">{volumePercent.toFixed(1)}%</span>
         </div>
         <div className="h-3 bg-slate-700 rounded-full overflow-hidden">
@@ -41,7 +43,7 @@ export function StatsPanel() {
       {/* Agirlik Kullanimi */}
       <div className="mb-4">
         <div className="flex items-center justify-between text-sm mb-1">
-          <span className="text-slate-400">Agirlik Kullanimi</span>
+          <span className="text-slate-400">{t.weightUsage}</span>
           <span className="font-medium">{weightPercent.toFixed(1)}%</span>
         </div>
         <div className="h-3 bg-slate-700 rounded-full overflow-hidden">
@@ -64,14 +66,14 @@ export function StatsPanel() {
           <Package className="w-5 h-5 text-green-400" />
           <div>
             <div className="text-xl font-bold">{packingResult.packedItems.length}</div>
-            <div className="text-xs text-slate-400">Yerlesti</div>
+            <div className="text-xs text-slate-400">{t.packed}</div>
           </div>
         </div>
         <div className="bg-slate-700/50 rounded-lg p-3 flex items-center gap-2">
           <AlertTriangle className="w-5 h-5 text-amber-400" />
           <div>
             <div className="text-xl font-bold">{packingResult.unpackedItems.length}</div>
-            <div className="text-xs text-slate-400">Sigmadi</div>
+            <div className="text-xs text-slate-400">{t.unpacked}</div>
           </div>
         </div>
       </div>
@@ -79,7 +81,7 @@ export function StatsPanel() {
       {/* Sigmayan Esyalar */}
       {packingResult.unpackedItems.length > 0 && (
         <div className="mt-4">
-          <div className="text-sm text-slate-400 mb-2">Sigmayan Esyalar:</div>
+          <div className="text-sm text-slate-400 mb-2">{t.unpackedItems}</div>
           <div className="space-y-1">
             {packingResult.unpackedItems.map((item) => (
               <div

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useStore } from '../store/useStore';
 import type { ConstraintType } from '../types';
+import { translations } from '../lib/i18n';
 import { ConstraintSelector } from './ConstraintBadge';
 import { Plus } from 'lucide-react';
 
@@ -26,7 +27,8 @@ const initialFormData: FormData = {
 
 export function ItemForm() {
   const [formData, setFormData] = useState<FormData>(initialFormData);
-  const addItem = useStore((state) => state.addItem);
+  const { addItem, language } = useStore();
+  const t = translations[language];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,18 +58,18 @@ export function ItemForm() {
     <form onSubmit={handleSubmit} className="bg-slate-800 rounded-lg p-4">
       <div className="flex items-center gap-2 mb-4">
         <Plus className="w-5 h-5 text-green-400" />
-        <h2 className="text-lg font-semibold">Esya Ekle</h2>
+        <h2 className="text-lg font-semibold">{t.addItem}</h2>
       </div>
 
       <div className="space-y-3">
         {/* Esya Adi */}
         <div>
-          <label className="block text-sm text-slate-400 mb-1">Esya Adi</label>
+          <label className="block text-sm text-slate-400 mb-1">{t.itemName}</label>
           <input
             type="text"
             value={formData.name}
             onChange={(e) => handleChange('name', e.target.value)}
-            placeholder="Ornek: Koli A"
+            placeholder={t.itemNamePlaceholder}
             className="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
           />
         </div>
@@ -75,7 +77,7 @@ export function ItemForm() {
         {/* Boyutlar */}
         <div className="grid grid-cols-3 gap-2">
           <div>
-            <label className="block text-sm text-slate-400 mb-1">Uzunluk (cm)</label>
+            <label className="block text-sm text-slate-400 mb-1">{t.length}</label>
             <input
               type="number"
               value={formData.length}
@@ -86,7 +88,7 @@ export function ItemForm() {
             />
           </div>
           <div>
-            <label className="block text-sm text-slate-400 mb-1">Genislik (cm)</label>
+            <label className="block text-sm text-slate-400 mb-1">{t.width}</label>
             <input
               type="number"
               value={formData.width}
@@ -97,7 +99,7 @@ export function ItemForm() {
             />
           </div>
           <div>
-            <label className="block text-sm text-slate-400 mb-1">Yukseklik (cm)</label>
+            <label className="block text-sm text-slate-400 mb-1">{t.height}</label>
             <input
               type="number"
               value={formData.height}
@@ -112,7 +114,7 @@ export function ItemForm() {
         {/* Agirlik ve Adet */}
         <div className="grid grid-cols-2 gap-2">
           <div>
-            <label className="block text-sm text-slate-400 mb-1">Agirlik (kg)</label>
+            <label className="block text-sm text-slate-400 mb-1">{t.weight}</label>
             <input
               type="number"
               value={formData.weight}
@@ -124,7 +126,7 @@ export function ItemForm() {
             />
           </div>
           <div>
-            <label className="block text-sm text-slate-400 mb-1">Adet</label>
+            <label className="block text-sm text-slate-400 mb-1">{t.quantity}</label>
             <input
               type="number"
               value={formData.quantity}
@@ -138,7 +140,7 @@ export function ItemForm() {
 
         {/* Kisitlamalar */}
         <div>
-          <label className="block text-sm text-slate-400 mb-2">Kisitlamalar</label>
+          <label className="block text-sm text-slate-400 mb-2">{t.constraints}</label>
           <ConstraintSelector
             selected={formData.constraints}
             onChange={(constraints) => handleChange('constraints', constraints)}
@@ -151,7 +153,7 @@ export function ItemForm() {
           className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2"
         >
           <Plus className="w-5 h-5" />
-          Esya Ekle
+          {t.addItem}
         </button>
       </div>
     </form>

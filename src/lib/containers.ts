@@ -1,4 +1,5 @@
-import type { ContainerType, Constraint, ConstraintType } from '../types';
+import type { ContainerType, Constraint, ConstraintType, Language } from '../types';
+import { translations } from './i18n';
 
 // Standart konteyner tipleri (ic olculer - cm cinsinden)
 export const CONTAINERS: ContainerType[] = [
@@ -31,44 +32,59 @@ export const CONTAINERS: ContainerType[] = [
   }
 ];
 
-// Kisitlama tanimlari
-export const CONSTRAINTS: Record<ConstraintType, Constraint> = {
-  must_be_on_top: {
-    type: 'must_be_on_top',
-    label: 'Ustte Olmali',
-    icon: '🔝',
-    color: '#f59e0b',
-    description: 'Bu esyanin ustune hicbir sey konulamaz'
-  },
-  must_be_on_bottom: {
-    type: 'must_be_on_bottom',
-    label: 'Altta Olmali',
-    icon: '🔻',
-    color: '#ef4444',
-    description: 'Bu esya zemine yakin olmali'
-  },
-  fragile: {
-    type: 'fragile',
-    label: 'Kirilgan',
-    icon: '📦',
-    color: '#ec4899',
-    description: 'Ustune maksimum 20kg yuk konulabilir'
-  },
-  no_rotate: {
-    type: 'no_rotate',
-    label: 'Dondurulemez',
-    icon: '🚫',
-    color: '#6366f1',
-    description: 'Sadece belirtilen yonde yerlestirilebilir'
-  },
-  heavy_bottom: {
-    type: 'heavy_bottom',
-    label: 'Agir - Alta',
-    icon: '⚓',
-    color: '#14b8a6',
-    description: 'Agir esya, altta ve merkezde olmali'
-  }
+// Constraint base data (without translations)
+const CONSTRAINT_BASE: Record<ConstraintType, { icon: string; color: string }> = {
+  must_be_on_top: { icon: '🔝', color: '#f59e0b' },
+  must_be_on_bottom: { icon: '🔻', color: '#ef4444' },
+  fragile: { icon: '📦', color: '#ec4899' },
+  no_rotate: { icon: '🚫', color: '#6366f1' },
+  heavy_bottom: { icon: '⚓', color: '#14b8a6' }
 };
+
+// Get constraints with translations
+export function getConstraints(lang: Language): Record<ConstraintType, Constraint> {
+  const t = translations[lang];
+  return {
+    must_be_on_top: {
+      type: 'must_be_on_top',
+      label: t.mustBeOnTop,
+      icon: CONSTRAINT_BASE.must_be_on_top.icon,
+      color: CONSTRAINT_BASE.must_be_on_top.color,
+      description: t.mustBeOnTopDesc
+    },
+    must_be_on_bottom: {
+      type: 'must_be_on_bottom',
+      label: t.mustBeOnBottom,
+      icon: CONSTRAINT_BASE.must_be_on_bottom.icon,
+      color: CONSTRAINT_BASE.must_be_on_bottom.color,
+      description: t.mustBeOnBottomDesc
+    },
+    fragile: {
+      type: 'fragile',
+      label: t.fragile,
+      icon: CONSTRAINT_BASE.fragile.icon,
+      color: CONSTRAINT_BASE.fragile.color,
+      description: t.fragileDesc
+    },
+    no_rotate: {
+      type: 'no_rotate',
+      label: t.noRotate,
+      icon: CONSTRAINT_BASE.no_rotate.icon,
+      color: CONSTRAINT_BASE.no_rotate.color,
+      description: t.noRotateDesc
+    },
+    heavy_bottom: {
+      type: 'heavy_bottom',
+      label: t.heavyBottom,
+      icon: CONSTRAINT_BASE.heavy_bottom.icon,
+      color: CONSTRAINT_BASE.heavy_bottom.color,
+      description: t.heavyBottomDesc
+    }
+  };
+}
+
+// Default CONSTRAINTS for backwards compatibility (English)
+export const CONSTRAINTS: Record<ConstraintType, Constraint> = getConstraints('en');
 
 // Rastgele renk uretici
 const ITEM_COLORS = [

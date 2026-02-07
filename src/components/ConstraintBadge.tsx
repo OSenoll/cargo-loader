@@ -1,5 +1,6 @@
 import type { ConstraintType } from '../types';
-import { CONSTRAINTS } from '../lib/containers';
+import { getConstraints } from '../lib/containers';
+import { useStore } from '../store/useStore';
 
 interface ConstraintBadgeProps {
   type: ConstraintType;
@@ -8,7 +9,9 @@ interface ConstraintBadgeProps {
 }
 
 export function ConstraintBadge({ type, size = 'md', showLabel = true }: ConstraintBadgeProps) {
-  const constraint = CONSTRAINTS[type];
+  const { language } = useStore();
+  const constraints = getConstraints(language);
+  const constraint = constraints[type];
 
   const sizeClasses = size === 'sm'
     ? 'text-xs px-1.5 py-0.5'
@@ -32,6 +35,9 @@ interface ConstraintSelectorProps {
 }
 
 export function ConstraintSelector({ selected, onChange }: ConstraintSelectorProps) {
+  const { language } = useStore();
+  const constraints = getConstraints(language);
+
   const toggleConstraint = (type: ConstraintType) => {
     if (selected.includes(type)) {
       onChange(selected.filter(c => c !== type));
@@ -42,7 +48,7 @@ export function ConstraintSelector({ selected, onChange }: ConstraintSelectorPro
 
   return (
     <div className="flex flex-wrap gap-2">
-      {Object.values(CONSTRAINTS).map((constraint) => (
+      {Object.values(constraints).map((constraint) => (
         <button
           key={constraint.type}
           type="button"

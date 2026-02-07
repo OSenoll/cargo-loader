@@ -1,22 +1,27 @@
 import { useEffect } from 'react';
 import { useStore } from './store/useStore';
 import { packItems } from './lib/packer';
+import { translations } from './lib/i18n';
 import { ContainerSelector } from './components/ContainerSelector';
 import { ItemForm } from './components/ItemForm';
 import { ItemList } from './components/ItemList';
 import { StatsPanel } from './components/StatsPanel';
 import { Scene3D } from './components/Scene3D';
-import { Truck, Play, RotateCcw } from 'lucide-react';
+import { Truck, Play, RotateCcw, Globe } from 'lucide-react';
 
 function App() {
   const {
     items,
     selectedContainer,
     isPacking,
+    language,
+    setLanguage,
     setPackingResult,
     setIsPacking,
     loadFromStorage
   } = useStore();
+
+  const t = translations[language];
 
   // Sayfa yuklendiginde localStorage'dan veri yukle
   useEffect(() => {
@@ -42,6 +47,11 @@ function App() {
     setPackingResult(null);
   };
 
+  // Dil degistir
+  const toggleLanguage = () => {
+    setLanguage(language === 'en' ? 'tr' : 'en');
+  };
+
   return (
     <div className="min-h-screen bg-slate-900">
       {/* Header */}
@@ -52,18 +62,28 @@ function App() {
               <Truck className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-white">Cargo Loader</h1>
-              <p className="text-sm text-slate-400">Konteyner Yukleme Optimizasyonu</p>
+              <h1 className="text-xl font-bold text-white">{t.appName}</h1>
+              <p className="text-sm text-slate-400">{t.appSubtitle}</p>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
+            {/* Language Switcher */}
+            <button
+              onClick={toggleLanguage}
+              className="flex items-center gap-2 px-3 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors"
+              title={language === 'en' ? 'Switch to Turkish' : 'Türkçeye geç'}
+            >
+              <Globe className="w-4 h-4" />
+              <span className="text-sm font-medium">{language === 'en' ? 'TR' : 'EN'}</span>
+            </button>
+
             <button
               onClick={handleReset}
               className="flex items-center gap-2 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors"
             >
               <RotateCcw className="w-4 h-4" />
-              Sifirla
+              {t.reset}
             </button>
             <button
               onClick={handlePack}
@@ -71,7 +91,7 @@ function App() {
               className="flex items-center gap-2 px-6 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-600 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors"
             >
               <Play className="w-4 h-4" />
-              {isPacking ? 'Hesaplaniyor...' : 'Hesapla'}
+              {isPacking ? t.calculating : t.calculate}
             </button>
           </div>
         </div>
@@ -98,22 +118,22 @@ function App() {
 
             {/* Kullanim Kilavuzu */}
             <div className="bg-slate-800 rounded-lg p-4">
-              <h3 className="font-semibold mb-3 text-slate-300">Nasil Kullanilir?</h3>
+              <h3 className="font-semibold mb-3 text-slate-300">{t.howToUse}</h3>
               <ol className="text-sm text-slate-400 space-y-2 list-decimal list-inside">
-                <li>Konteyner tipini secin</li>
-                <li>Esyalarinizi boyut ve kisitlamalariyla ekleyin</li>
-                <li>"Hesapla" butonuna tiklayin</li>
-                <li>3D goruntude sonucu inceleyin</li>
+                <li>{t.step1}</li>
+                <li>{t.step2}</li>
+                <li>{t.step3}</li>
+                <li>{t.step4}</li>
               </ol>
 
               <div className="mt-4 pt-4 border-t border-slate-700">
-                <h4 className="font-medium text-slate-300 mb-2">Kisitlamalar</h4>
+                <h4 className="font-medium text-slate-300 mb-2">{t.constraintsTitle}</h4>
                 <div className="text-xs text-slate-500 space-y-1">
-                  <div><span className="text-amber-400">🔝</span> Ustte Olmali - Uzerine sey konulmaz</div>
-                  <div><span className="text-red-400">🔻</span> Altta Olmali - Zemine yakin</div>
-                  <div><span className="text-pink-400">📦</span> Kirilgan - Max 20kg yuk</div>
-                  <div><span className="text-indigo-400">🚫</span> Dondurulemez - Sabit yon</div>
-                  <div><span className="text-teal-400">⚓</span> Agir - Alta yerlesir</div>
+                  <div><span className="text-amber-400">🔝</span> {t.constraintMustBeOnTop}</div>
+                  <div><span className="text-red-400">🔻</span> {t.constraintMustBeOnBottom}</div>
+                  <div><span className="text-pink-400">📦</span> {t.constraintFragile}</div>
+                  <div><span className="text-indigo-400">🚫</span> {t.constraintNoRotate}</div>
+                  <div><span className="text-teal-400">⚓</span> {t.constraintHeavyBottom}</div>
                 </div>
               </div>
             </div>

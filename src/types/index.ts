@@ -1,3 +1,6 @@
+// Dil tipleri
+export type Language = 'en' | 'tr';
+
 // Kisitlama tipleri
 export type ConstraintType =
   | 'must_be_on_top'      // Ustte olmali - ustune bir sey konulamaz
@@ -71,6 +74,9 @@ export interface PackingResult {
 
 // Store state tipi
 export interface AppState {
+  // Dil
+  language: Language;
+
   // Konteyner
   selectedContainer: ContainerType;
   containers: ContainerType[];
@@ -86,6 +92,7 @@ export interface AppState {
   selectedItemId: string | null;
 
   // Actions
+  setLanguage: (language: Language) => void;
   setSelectedContainer: (container: ContainerType) => void;
   addItem: (item: Omit<CargoItem, 'id' | 'color'>) => void;
   updateItem: (id: string, updates: Partial<CargoItem>) => void;

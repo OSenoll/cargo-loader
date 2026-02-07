@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { AppState, CargoItem, ContainerType } from '../types';
+import type { AppState, CargoItem, ContainerType, Language } from '../types';
 import { CONTAINERS, getRandomColor } from '../lib/containers';
 
 const STORAGE_KEY = 'cargo-loader-data';
@@ -10,12 +10,19 @@ function generateId(): string {
 
 export const useStore = create<AppState>((set, get) => ({
   // Baslangic degerleri
+  language: 'en' as Language, // English default
   selectedContainer: CONTAINERS[2], // 40ft HC default
   containers: CONTAINERS,
   items: [],
   packingResult: null,
   isPacking: false,
   selectedItemId: null,
+
+  // Dil degistirme
+  setLanguage: (language: Language) => {
+    set({ language });
+    get().saveToStorage();
+  },
 
   // Container secimi
   setSelectedContainer: (container: ContainerType) => {
@@ -80,6 +87,7 @@ export const useStore = create<AppState>((set, get) => ({
         const parsed = JSON.parse(data);
         const container = CONTAINERS.find(c => c.id === parsed.containerId) || CONTAINERS[2];
         set({
+          language: parsed.language || 'en',
           selectedContainer: container,
           items: parsed.items || []
         });
@@ -94,6 +102,7 @@ export const useStore = create<AppState>((set, get) => ({
     try {
       const state = get();
       const data = {
+        language: state.language,
         containerId: state.selectedContainer.id,
         items: state.items
       };
