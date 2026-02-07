@@ -1,74 +1,74 @@
 # Cargo Loader
 
-3D konteyner yukleme optimizasyon uygulamasi. Esyalarinizi en verimli sekilde konteynere yerlestirin.
+3D container loading optimization app. Pack your items into containers in the most efficient way.
 
-![Cargo Loader](https://img.shields.io/badge/React-18-blue) ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue) ![Three.js](https://img.shields.io/badge/Three.js-3D-green) ![Tailwind](https://img.shields.io/badge/Tailwind-CSS-purple)
+![React](https://img.shields.io/badge/React-18-blue) ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue) ![Three.js](https://img.shields.io/badge/Three.js-3D-green) ![Tailwind](https://img.shields.io/badge/Tailwind-CSS-purple)
 
-## Ozellikler
+## Features
 
-- **3D Gorsellestirme** - Interaktif 3D gorunum (dondurme, yakinlastirma, esya secme)
-- **Akilli Yerlestirme** - LAFF algoritmasiyla optimal kutu yerlestirme
-- **Kisitlama Destegi** - Esyalara ozel kurallar tanimlama
-- **Gercek Konteyner Olculeri** - 20ft, 40ft ve 40ft High Cube destegi
-- **LocalStorage** - Verileriniz otomatik kaydedilir
+- **3D Visualization** - Interactive 3D view (rotate, zoom, select items)
+- **Smart Packing** - Optimal box placement using LAFF algorithm
+- **Constraint Support** - Define custom rules for items
+- **Real Container Sizes** - 20ft, 40ft and 40ft High Cube support
+- **LocalStorage** - Your data is automatically saved
 
-## Kisitlama Etiketleri
+## Constraint Labels
 
-| Etiket | Aciklama |
-|--------|----------|
-| Ustte Olmali | Bu esyanin ustune hicbir sey konulamaz |
-| Altta Olmali | Bu esya zemine yakin olmali |
-| Kirilgan | Ustune maksimum 20kg yuk konulabilir |
-| Dondurulemez | Sadece belirtilen yonde yerlestirilebilir |
-| Agir - Alta | Agir esya, altta ve merkezde olmali |
+| Label | Description |
+|-------|-------------|
+| Must Be On Top | Nothing can be placed on top of this item |
+| Must Be On Bottom | This item should be placed near the ground |
+| Fragile | Maximum 20kg load can be placed on top |
+| No Rotate | Can only be placed in the specified orientation |
+| Heavy - Bottom | Heavy item, should be at bottom and center |
 
-## Kurulum
+## Installation
 
 ```bash
-# Repoyu klonla
+# Clone the repository
 git clone https://github.com/OSenoll/cargo-loader.git
 cd cargo-loader
 
-# Bagimliliklari yukle
+# Install dependencies
 npm install
 
-# Gelistirme sunucusunu baslat
+# Start development server
 npm run dev
 ```
 
-## Kullanim
+## Usage
 
-1. **Konteyner Sec** - Sol panelden konteyner tipini secin
-2. **Esya Ekle** - Boyut, agirlik ve kisitlamalari girin
-3. **Hesapla** - "Hesapla" butonuna tiklayin
-4. **Incele** - 3D goruntude sonucu inceleyin, esyalara tiklayarak detaylari gorun
+1. **Select Container** - Choose container type from the left panel
+2. **Add Items** - Enter dimensions, weight and constraints
+3. **Calculate** - Click the "Calculate" button
+4. **Inspect** - View results in 3D, click on items for details
 
-## Teknolojiler
+## Tech Stack
 
 - **React 18** + TypeScript
-- **Three.js** / React Three Fiber - 3D gorsellestirme
-- **Zustand** - State yonetimi
+- **Three.js** / React Three Fiber - 3D visualization
+- **Zustand** - State management
 - **Tailwind CSS** - Styling
 - **Vite** - Build tool
 
-## Algoritma
+## Algorithm
 
-Uygulama **LAFF (Largest Area Fit First)** algoritmasini kullanir:
+The app uses the **LAFF (Largest Area Fit First)** algorithm:
 
-1. Esyalar oncelik sirasina gore siralanir (agir ve buyuk olanlar once)
-2. Her esya icin en uygun bos alan bulunur
-3. Kisitlamalar kontrol edilir (kirilganlik, ustte olma zorunlulugu vb.)
-4. Esya yerlestirildikten sonra kalan bos alanlar guncellenir
+1. Items are sorted by priority (heavy and large items first)
+2. The best available space is found for each item
+3. Constraints are checked (fragility, must-be-on-top, etc.)
+4. Remaining spaces are updated after each placement
 
-## Konteyner Olculeri
+## Container Specifications
 
-| Tip | Uzunluk | Genislik | Yukseklik | Max Agirlik |
-|-----|---------|----------|-----------|-------------|
-| 20ft Standard | 5.89m | 2.35m | 2.39m | 28.2 ton |
-| 40ft Standard | 12.03m | 2.35m | 2.39m | 28.8 ton |
-| 40ft High Cube | 12.03m | 2.35m | 2.69m | 28.56 ton |
+| Type | Length | Width | Height | Max Weight |
+|------|--------|-------|--------|------------|
+| 20ft Standard | 5.89m | 2.35m | 2.39m | 28.2 tons |
+| 40ft Standard | 12.03m | 2.35m | 2.39m | 28.8 tons |
+| 40ft High Cube | 12.03m | 2.35m | 2.69m | 28.56 tons |
 
-## Lisans
+## License
 
 MIT
 
