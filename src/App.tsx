@@ -7,17 +7,22 @@ import { ItemForm } from './components/ItemForm';
 import { ItemList } from './components/ItemList';
 import { StatsPanel } from './components/StatsPanel';
 import { Scene3D } from './components/Scene3D';
-import { Truck, Play, RotateCcw, Globe } from 'lucide-react';
+import { Truck, Play, RotateCcw, Globe, Hand, MousePointer } from 'lucide-react';
 
 function App() {
   const {
     items,
     selectedContainer,
     isPacking,
+    packingResult,
     language,
+    isManualEditMode,
+    isManualPlaceMode,
     setLanguage,
     setPackingResult,
     setIsPacking,
+    setIsManualEditMode,
+    setIsManualPlaceMode,
     loadFromStorage
   } = useStore();
 
@@ -33,6 +38,8 @@ function App() {
     if (items.length === 0) return;
 
     setIsPacking(true);
+    setIsManualEditMode(false);
+    setIsManualPlaceMode(false);
 
     // Kucuk bir gecikme ile UI'in guncellenmesini bekle
     await new Promise(resolve => setTimeout(resolve, 100));
@@ -45,11 +52,33 @@ function App() {
   // Sonuclari temizle
   const handleReset = () => {
     setPackingResult(null);
+    setIsManualEditMode(false);
+    setIsManualPlaceMode(false);
   };
 
   // Dil degistir
   const toggleLanguage = () => {
     setLanguage(language === 'en' ? 'tr' : 'en');
+  };
+
+  // Manuel duzenleme toggle
+  const toggleManualEdit = () => {
+    const newState = !isManualEditMode;
+    setIsManualEditMode(newState);
+    if (newState) {
+      setIsManualPlaceMode(false);
+    }
+  };
+
+  // Manuel yerlestirme toggle
+  const toggleManualPlace = () => {
+    const newState = !isManualPlaceMode;
+    setIsManualPlaceMode(newState);
+    if (newState) {
+      setIsManualEditMode(true); // Also enable edit mode for dragging
+    } else {
+      setIsManualEditMode(false);
+    }
   };
 
   return (
@@ -76,6 +105,35 @@ function App() {
             >
               <Globe className="w-4 h-4" />
               <span className="text-sm font-medium">{language === 'en' ? 'TR' : 'EN'}</span>
+            </button>
+
+            {/* Manuel Duzenleme */}
+            {packingResult && (
+              <button
+                onClick={toggleManualEdit}
+                className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${
+                  isManualEditMode && !isManualPlaceMode
+                    ? 'bg-amber-600 hover:bg-amber-500 text-white'
+                    : 'bg-slate-700 hover:bg-slate-600 text-white'
+                }`}
+              >
+                <Hand className="w-4 h-4" />
+                <span className="text-sm font-medium">{t.manualEdit}</span>
+              </button>
+            )}
+
+            {/* Manuel Yerlestir */}
+            <button
+              onClick={toggleManualPlace}
+              disabled={items.length === 0}
+              className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${
+                isManualPlaceMode
+                  ? 'bg-purple-600 hover:bg-purple-500 text-white'
+                  : 'bg-slate-700 hover:bg-slate-600 text-white disabled:bg-slate-700/50 disabled:text-slate-500 disabled:cursor-not-allowed'
+              }`}
+            >
+              <MousePointer className="w-4 h-4" />
+              <span className="text-sm font-medium">{t.manualPlace}</span>
             </button>
 
             <button
@@ -107,7 +165,17 @@ function App() {
           </div>
 
           {/* Orta Panel - 3D Goruntu */}
-          <div className="col-span-6 bg-slate-800 rounded-lg overflow-hidden">
+          <div className="col-span-6 bg-slate-800 rounded-lg overflow-hidden relative">
+            {/* Mod bilgi banner */}
+            {(isManualEditMode || isManualPlaceMode) && (
+              <div className={`absolute top-3 left-1/2 -translate-x-1/2 z-10 px-4 py-2 rounded-lg text-sm font-medium shadow-lg ${
+                isManualPlaceMode
+                  ? 'bg-purple-600/90 text-white'
+                  : 'bg-amber-600/90 text-white'
+              }`}>
+                {isManualPlaceMode ? t.manualPlaceInfo : t.manualEditInfo}
+              </div>
+            )}
             <Scene3D />
           </div>
 

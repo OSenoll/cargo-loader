@@ -1,12 +1,14 @@
-import { Suspense } from 'react';
+import { Suspense, useRef, useCallback } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, PerspectiveCamera, Environment } from '@react-three/drei';
+import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import { useStore } from '../store/useStore';
 import { Container3D } from './Container3D';
 import { Item3D } from './Item3D';
 
 function Scene() {
   const { selectedContainer, packingResult, setSelectedItemId } = useStore();
+  const orbitRef = useRef<OrbitControlsImpl>(null);
 
   // Konteyner boyutlarina gore olcek (ekrana sigdirma)
   const maxDim = Math.max(selectedContainer.length, selectedContainer.width, selectedContainer.height);
@@ -18,6 +20,18 @@ function Scene() {
     y: -selectedContainer.height * scale / 2,
     z: -selectedContainer.width * scale / 2
   };
+
+  const handleDragStart = useCallback(() => {
+    if (orbitRef.current) {
+      orbitRef.current.enabled = false;
+    }
+  }, []);
+
+  const handleDragEnd = useCallback(() => {
+    if (orbitRef.current) {
+      orbitRef.current.enabled = true;
+    }
+  }, []);
 
   return (
     <>
@@ -42,11 +56,15 @@ function Scene() {
           packedItem={packedItem}
           scale={scale}
           containerOffset={containerOffset}
+          index={index}
+          onDragStart={handleDragStart}
+          onDragEnd={handleDragEnd}
         />
       ))}
 
       {/* Kamera kontrolleri */}
       <OrbitControls
+        ref={orbitRef}
         enableDamping
         dampingFactor={0.05}
         minDistance={3}

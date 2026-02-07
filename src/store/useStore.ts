@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import type { AppState, CargoItem, ContainerType, Language } from '../types';
-import { CONTAINERS, getRandomColor } from '../lib/containers';
+import { CONTAINERS, getRandomColor, calculateVolume } from '../lib/containers';
 
 const STORAGE_KEY = 'cargo-loader-data';
 
@@ -17,6 +17,9 @@ export const useStore = create<AppState>((set, get) => ({
   packingResult: null,
   isPacking: false,
   selectedItemId: null,
+  isManualEditMode: false,
+  isManualPlaceMode: false,
+  draggingItemIndex: null,
 
   // Dil degistirme
   setLanguage: (language: Language) => {
@@ -78,6 +81,124 @@ export const useStore = create<AppState>((set, get) => ({
 
   // Secili esya
   setSelectedItemId: (id) => set({ selectedItemId: id }),
+
+  // Manuel mod
+  setIsManualEditMode: (enabled) => set({ isManualEditMode: enabled }),
+  setIsManualPlaceMode: (enabled) => set({ isManualPlaceMode: enabled }),
+  setDraggingItemIndex: (index) => set({ draggingItemIndex: index }),
+
+  // Packed item pozisyonunu guncelle
+  updatePackedItemPosition: (index, position) => {
+    const state = get();
+    if (!state.packingResult) return;
+
+    const packedItems = [...state.packingResult.packedItems];
+    if (index < 0 || index >= packedItems.length) return;
+
+    packedItems[index] = {
+      ...packedItems[index],
+      position: { ...position }
+    };
+
+    // Istatistikleri yeniden hesapla
+    const container = state.selectedContainer;
+    const totalVolume = calculateVolume(container.length, container.width, container.height);
+    const usedVolume = packedItems.reduce(
+      (acc, pi) => acc + calculateVolume(pi.dimensions.width, pi.dimensions.height, pi.dimensions.depth),
+      0
+    );
+    const totalWeight = packedItems.reduce((acc, pi) => acc + pi.item.weight, 0);
+
+    set({
+      packingResult: {
+        ...state.packingResult,
+        packedItems,
+        volumeUtilization: (usedVolume / totalVolume) * 100,
+        weightUtilization: (totalWeight / container.maxWeight) * 100,
+        usedVolume,
+        totalVolume,
+        totalWeight
+      }
+    });
+  },
+
+  // Manuel yerlesim: esyayi konteynere ekle
+  addManualItem: (item) => {
+    const state = get();
+    const container = state.selectedContainer;
+
+    const newPackedItem = {
+      item,
+      position: { x: 0, y: 0, z: 0 },
+      rotation: { x: 0, y: 0, z: 0 },
+      dimensions: {
+        width: item.length,
+        height: item.height,
+        depth: item.width
+      }
+    };
+
+    const currentResult = state.packingResult || {
+      packedItems: [],
+      unpackedItems: [],
+      volumeUtilization: 0,
+      weightUtilization: 0,
+      totalVolume: calculateVolume(container.length, container.width, container.height),
+      usedVolume: 0,
+      totalWeight: 0
+    };
+
+    const packedItems = [...currentResult.packedItems, newPackedItem];
+    const usedVolume = packedItems.reduce(
+      (acc, pi) => acc + calculateVolume(pi.dimensions.width, pi.dimensions.height, pi.dimensions.depth),
+      0
+    );
+    const totalWeight = packedItems.reduce((acc, pi) => acc + pi.item.weight, 0);
+    const totalVolume = calculateVolume(container.length, container.width, container.height);
+
+    set({
+      packingResult: {
+        ...currentResult,
+        packedItems,
+        volumeUtilization: (usedVolume / totalVolume) * 100,
+        weightUtilization: (totalWeight / container.maxWeight) * 100,
+        usedVolume,
+        totalVolume,
+        totalWeight
+      }
+    });
+  },
+
+  // Packed item'i kaldir
+  removePackedItem: (index) => {
+    const state = get();
+    if (!state.packingResult) return;
+
+    const removed = state.packingResult.packedItems[index];
+    if (!removed) return;
+
+    const packedItems = state.packingResult.packedItems.filter((_, i) => i !== index);
+    const container = state.selectedContainer;
+    const totalVolume = calculateVolume(container.length, container.width, container.height);
+    const usedVolume = packedItems.reduce(
+      (acc, pi) => acc + calculateVolume(pi.dimensions.width, pi.dimensions.height, pi.dimensions.depth),
+      0
+    );
+    const totalWeight = packedItems.reduce((acc, pi) => acc + pi.item.weight, 0);
+
+    set({
+      packingResult: {
+        ...state.packingResult,
+        packedItems,
+        unpackedItems: [...state.packingResult.unpackedItems, removed.item],
+        volumeUtilization: (usedVolume / totalVolume) * 100,
+        weightUtilization: (totalWeight / container.maxWeight) * 100,
+        usedVolume,
+        totalVolume,
+        totalWeight
+      }
+    });
+  },
 
   // localStorage'dan yukle
   loadFromStorage: () => {

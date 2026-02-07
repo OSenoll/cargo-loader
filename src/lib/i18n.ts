@@ -66,6 +66,16 @@ export const translations = {
     fragileDesc: 'Maximum 20kg load can be placed on top',
     noRotateDesc: 'Can only be placed in the specified orientation',
     heavyBottomDesc: 'Heavy item, should be at bottom and center',
+
+    // Manual Mode
+    manualEdit: 'Manual Edit',
+    manualPlace: 'Manual Place',
+    placeItem: 'Place',
+    removeItem: 'Remove',
+    dragToMove: 'Drag items to reposition',
+    manualPlaceInfo: 'Click "Place" to add items to the container',
+    manualEditInfo: 'Drag items to adjust positions',
+    manualModeStats: 'Manual mode — stats update in real-time',
   },
   tr: {
     // Header
@@ -132,6 +142,16 @@ export const translations = {
     fragileDesc: 'Üstüne maksimum 20kg yük konulabilir',
     noRotateDesc: 'Sadece belirtilen yönde yerleştirilebilir',
     heavyBottomDesc: 'Ağır eşya, altta ve merkezde olmalı',
+
+    // Manual Mode
+    manualEdit: 'Manuel Düzenleme',
+    manualPlace: 'Manuel Yerleştir',
+    placeItem: 'Yerleştir',
+    removeItem: 'Kaldır',
+    dragToMove: 'Eşyaları sürükleyerek taşıyın',
+    manualPlaceInfo: 'Eşyaları konteynere eklemek için "Yerleştir"e tıklayın',
+    manualEditInfo: 'Eşyaları sürükleyerek pozisyonlarını ayarlayın',
+    manualModeStats: 'Manuel mod — istatistikler anlık güncellenir',
   }
 } as const;
 

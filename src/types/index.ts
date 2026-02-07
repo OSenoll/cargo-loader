@@ -91,6 +91,11 @@ export interface AppState {
   // Secili esya (3D'de highlight icin)
   selectedItemId: string | null;
 
+  // Manuel mod
+  isManualEditMode: boolean;
+  isManualPlaceMode: boolean;
+  draggingItemIndex: number | null;
+
   // Actions
   setLanguage: (language: Language) => void;
   setSelectedContainer: (container: ContainerType) => void;
@@ -101,6 +106,12 @@ export interface AppState {
   setPackingResult: (result: PackingResult | null) => void;
   setIsPacking: (isPacking: boolean) => void;
   setSelectedItemId: (id: string | null) => void;
+  setIsManualEditMode: (enabled: boolean) => void;
+  setIsManualPlaceMode: (enabled: boolean) => void;
+  setDraggingItemIndex: (index: number | null) => void;
+  updatePackedItemPosition: (index: number, position: { x: number; y: number; z: number }) => void;
+  addManualItem: (item: CargoItem) => void;
+  removePackedItem: (index: number) => void;
   loadFromStorage: () => void;
   saveToStorage: () => void;
 }

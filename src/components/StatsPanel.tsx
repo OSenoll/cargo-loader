@@ -3,7 +3,7 @@ import { translations } from '../lib/i18n';
 import { BarChart3, Package, AlertTriangle } from 'lucide-react';
 
 export function StatsPanel() {
-  const { packingResult, selectedContainer, language } = useStore();
+  const { packingResult, selectedContainer, language, isManualEditMode, isManualPlaceMode } = useStore();
   const t = translations[language];
 
   if (!packingResult) {
@@ -77,6 +77,13 @@ export function StatsPanel() {
           </div>
         </div>
       </div>
+
+      {/* Manuel mod bilgi notu */}
+      {(isManualEditMode || isManualPlaceMode) && (
+        <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg px-3 py-2 mt-3 text-xs text-amber-300">
+          {t.manualModeStats}
+        </div>
+      )}
 
       {/* Sigmayan Esyalar */}
       {packingResult.unpackedItems.length > 0 && (
