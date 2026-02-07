@@ -6,7 +6,6 @@ import { ConstraintSelector } from './ConstraintBadge';
 import { Plus } from 'lucide-react';
 
 interface FormData {
-  name: string;
   length: string;
   width: string;
   height: string;
@@ -16,7 +15,6 @@ interface FormData {
 }
 
 const initialFormData: FormData = {
-  name: '',
   length: '',
   width: '',
   height: '',
@@ -25,20 +23,33 @@ const initialFormData: FormData = {
   constraints: []
 };
 
+// A, B, C ... Z, AA, AB ... seklinde otomatik isim uret
+function getAutoName(index: number): string {
+  let name = '';
+  let i = index;
+  do {
+    name = String.fromCharCode(65 + (i % 26)) + name;
+    i = Math.floor(i / 26) - 1;
+  } while (i >= 0);
+  return name;
+}
+
 export function ItemForm() {
   const [formData, setFormData] = useState<FormData>(initialFormData);
-  const { addItem, language } = useStore();
+  const { addItem, items, language } = useStore();
   const t = translations[language];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.name || !formData.length || !formData.width || !formData.height) {
+    if (!formData.length || !formData.width || !formData.height) {
       return;
     }
 
+    const autoName = getAutoName(items.length);
+
     addItem({
-      name: formData.name,
+      name: autoName,
       length: parseFloat(formData.length),
       width: parseFloat(formData.width),
       height: parseFloat(formData.height),
@@ -62,18 +73,6 @@ export function ItemForm() {
       </div>
 
       <div className="space-y-3">
-        {/* Esya Adi */}
-        <div>
-          <label className="block text-sm text-slate-400 mb-1">{t.itemName}</label>
-          <input
-            type="text"
-            value={formData.name}
-            onChange={(e) => handleChange('name', e.target.value)}
-            placeholder={t.itemNamePlaceholder}
-            className="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
-          />
-        </div>
-
         {/* Boyutlar */}
         <div className="grid grid-cols-3 gap-2">
           <div>
